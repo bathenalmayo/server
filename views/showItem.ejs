@@ -1,0 +1,15 @@
+<%- include ('head') %> 
+<% if (!item) { %>
+    <h1>ITEM NOT FOUND</h1>
+    <a href="/list">Back To All Items</a> 
+<% } else{ %>
+<h1>SHOW ITEM</h1>
+
+<h3><%= item.name %> - <%= item.qty %>  </h3> &nbsp;
+
+<form action="/list/<%= item.id %>?_method=delete" method="post">
+    <input type="submit" value="DELETE">
+</form> &nbsp;
+<a href="/list/<%= item.id %>/edit">Edit Item</a> &nbsp;
+<a href="/list">Back To All Items</a>
+<% } %> 

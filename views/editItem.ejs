@@ -1,0 +1,17 @@
+<%- include ('head') %> 
+<% if (!item) { %>
+    <h1>ITEM NOT FOUND</h1>
+<% } else{ %>
+
+<h1>EDIT ITEM</h1>
+
+<form action="/list/<%= item.id %>?_method=patch" method="post" >
+    <label for="name"> Enter Item Name:</label><br>
+    <input type="text" id="name" name="name" placeholder="<%= item.name %> " required><br>
+    <label for="qty">Enter Quantity:</label><br>
+    <input type="text" id="qty" name="qty" placeholder="<%= item.qty %> " required><br><br>
+    <input type="submit" value="Submit"> &nbsp;
+    <a href="/list/<% item.id %>">Back To Item</a>
+</form>
+
+<% }%>

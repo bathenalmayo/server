@@ -1,0 +1,11 @@
+<%- include ('head') %> 
+<h1>CREATE ITEM</h1>
+
+<form action="/list" method="post">
+    <label for="name"> Enter Item Name:</label><br>
+    <input type="text" id="name" name="name" placeholder="Name" required><br>
+    <label for="qty">Enter Quantity:</label><br>
+    <input type="text" id="qty" name="qty" placeholder="Qty" required><br><br>
+    <input type="submit" value="Submit">
+</form> &nbsp;
+<a href="/list">Back To All Items</a>
