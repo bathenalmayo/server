@@ -7,7 +7,7 @@
 
 <h3><%= item.name %> - <%= item.qty %>  </h3> &nbsp;
 
-<form action="/list/<%= item.id %>?_method=delete" method="post">
+<form action="/list/<%= item._id %>?_method=delete" method="post">
     <input type="submit" value="DELETE">
 </form> &nbsp;
 <a href="/list/<%= item.id %>/edit">Edit Item</a> &nbsp;

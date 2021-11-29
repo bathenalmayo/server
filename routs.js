@@ -1,25 +1,34 @@
-//restfull route
 const express = require('express');
 const router = express.Router()
-const { v4: uuidv4 } = require('uuid');
-uuidv4();
 let listItems = require('./data');
 //let listItems = []; // option for empty list
+const mongoose  = require('mongoose');
+const Item = require('./model');
+
+//INSERT DATA FROM HARDCODED ARRAY
+// Item.insertMany(listItems)
+// .then((res) => {
+//   console.log(res);
+
+// }).catch((err) => {
+//   console.log(err);
+// });
 
 
 router.route('/list')
-    .get(function (req, res) {//get all list same as the homePage
-        res.render('allList',{listItems})
+    .get( async (req, res) => {
+      const list =  await Item.find({}); 
+      res.render('allList',{list})
       })
-    .post(function (req, res) {//create new item
+    .post(async (req, res) => {
         //destructor req.body to prevent implantation via postman
-        try{
-        const {name = "item", qty = 1} = req.body; 
-        listItems.push({id: uuidv4(), name, qty})
-        console.log(listItems);
-        res.redirect('/list')
+        try{ 
+        const newItem = new Item(req.body);
+        await newItem.save();
+        console.log(newItem);
+        res.redirect('/list');
         }catch(e){
-          console.log("ERROR IN CREATING NEW ITEM",e)
+          console.log("ERROR IN CREATING NEW ITEM",e);
           res.redirect('/list/new');
         }
       })  
@@ -31,36 +40,30 @@ router.get('/list/new', function (req, res) {
   })
 
 router.route('/list/:id')
-      .get(function (req, res) {//show specific item
+      .get( async(req, res)=> {
         const {id} = req.params;
-        const item = listItems.find(i => i.id == id);
+        const item = await Item.findById(id);
         res.render('showItem',{item})
       })
-      .patch(function (req, res) {//update item
+      .patch(async (req, res)=> {
         try{
         const {id} = req.params;
-        const prevItem = listItems.find( i => i.id == id);
-        const newItemName = req.body.name ;
-        const newItemQty = req.body.qty ;
-        prevItem.name = newItemName; ///checking about immutability term!!!
-        prevItem.qty = newItemQty;
+        const item = await Item.findByIdAndUpdate(id, req.body);
         res.redirect('/list')
         }catch(e){
           console.log("ERROR IN ITEM UPDATING",e)
           res.redirect('/list/:id');
         }
       })
-      .delete(function (req, res) {//delete item
+      .delete(async (req, res)=> {
         const {id} = req.params;
-        listItems = listItems.filter(i => i.id !== id);
+        const item = await Item.findByIdAndDelete(id);
         res.redirect('/list')
       })
 
-      
- //edit item  form
-router.get('/list/:id/edit', function (req, res) {
+router.get('/list/:id/edit', async (req, res)=> {
     const {id} = req.params;
-    const item = listItems.find( i => i.id == id);
+    const item = await Item.findById(id);
     res.render('editItem',{item})
   })    
 

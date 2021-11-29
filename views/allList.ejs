@@ -1,13 +1,12 @@
-<!-- couldnt use !listItems cause the array always exit mybe use session store?  -->
 <%- include ('head') %> 
-<% if (listItems.length == 0) { %>
+<% if (list.length == 0) { %>
     <h1>YOUR LIST IS EMPTY</h1>
     <a href="/list/new">Add Item</a> 
 <% } else{ %>
 
 <h1>YOUR LIST:</h1>
 <ul>
-    <% for( let item of listItems ) { %>
+    <% for( let item of list ) { %>
         <li><%= item.name %> - <%= item.qty %>  &nbsp; 
             <a href="/list/<%= item.id %>">Show Item</a>
         </li>

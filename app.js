@@ -1,9 +1,25 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
+const { MongoClient } = require('mongodb');
+const mongoose  = require('mongoose');
+const Item = require('./model');
 const listRoute = require('./routs');
-let listItems = require('./data');
 const port = process.env.port || 3000; 
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/serverTest'; 
+
+mongoose.connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+    
+});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log(`Database connected`);
+});
+
 
 //executing express
 const app = express();
@@ -25,8 +41,9 @@ app.use(methodOverride('_method'))
 app.use('/', listRoute);
 
 //cant give up this line(homePage/index.ejs),has duplicat route to 'allList'
-app.get('/', function (req, res) { //get all list same as the homePage
-    res.render('allList', {listItems})
+app.get('/', async (req, res) => { //get all list same as the homePage
+    const list = await Item.find({}); 
+    res.render('allList', {list})
   })
 
 //defualt if rout is not exist
